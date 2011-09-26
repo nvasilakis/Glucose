@@ -40,12 +40,13 @@ int test()
 {
   // consec is always 1 in this program
   int input, consec, count, last;
-  klee_make_symbolic(&input, sizeof(input), "input");
-  klee_make_symbolic(&consec, sizeof(consec), "consec");
-  klee_make_symbolic(&count, sizeof(count), "count");
-  klee_make_symbolic(&last, sizeof(last), "last");
-  update(input, consec, count, last);
-}
+  do {
+    klee_make_symbolic(&input, sizeof(input), "input");
+  } while (update(input, consec_g, count_g, last_g));
+//  klee_make_symbolic(&consec, sizeof(consec), "consec");
+//  klee_make_symbolic(&count, sizeof(count), "count");
+//  klee_make_symbolic(&last, sizeof(last), "last");
+  }
 
 
 int main()
