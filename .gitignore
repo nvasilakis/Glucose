@@ -1,3 +1,4 @@
 *.o
 klee-out*
+klee-last
 *.txt
