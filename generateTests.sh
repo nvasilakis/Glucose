@@ -33,3 +33,8 @@ for file in $*; do
   echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
   ktest-tool.cde klee-last/test*.ktest | tee -a "$results";
 done
+
+# Output when tests are done
+if [ -f `which notify-send` ]; then 
+  notify-send "Project \"Glucose\"" "Completed Test Case Generation" -i /usr/share/pixmaps/gnome-color-browser.png -t 5000
+fi
