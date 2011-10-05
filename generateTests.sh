@@ -7,6 +7,7 @@
 #export PATH=/media/w7/Projects/klee-cde-package/bin:$PATH;
 #export PATH=/media/w7/Projects/blast-2.5_linux-bin-x86:$PATH;
 #export PATH=/media/w7/Projects/cvc-linux-1.0a/bin:$PATH;
+# need to log an aproximation profiling
 
 #if [[ ${file: -4} ~= /regex/ ]]
 prefix="out";
@@ -35,11 +36,14 @@ for file in $*; do
   echo -e "\n[$file][Compiling to LLVM bitcode]\n";
   llvm-gcc.cde --emit-llvm -c -g $file;
   echo -e "[$file][Running KLEE]\n";
+  START=$(date +%s)
   klee.cde -write-cvcs `echo $file | sed "s/c$/o/"`;
+  END=$(date +%s)
+  echo -e "\n[$file][Generated x paths in $(( $END - $START )) seconds]\n";
   echo -e "\n[$file][Outputting results]\n";
-  echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
-  ktest-tool.cde klee-last/test*.ktest | tee -a "$results";
-  echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
+  echo -e "\n[$file][Converting klee results from bin to ascii]\n" | tee -a "$results";
+  ktest-tool.cde klee-last/test*.ktest  >> "$results"; #| tee -a
+  echo -e "\n[$file][Converting cvc results to branch statements]\n" | tee -a "$results";
   cd pathconditions/
   java CreateAssertion ../klee-last/test*.cvc >> "../$cvc"; #| tee -a "$cvc";
   cd ..
