@@ -3,7 +3,12 @@
 # given input and outputs results on file and stdout.
 # TODO: in order to rename results incrementally as KLEE
 # does, we need to get last KLEE build number. Smth like
-# if [[ ${file: -4} ~= /regex/ ]]
+
+#export PATH=/media/w7/Projects/klee-cde-package/bin:$PATH;
+#export PATH=/media/w7/Projects/blast-2.5_linux-bin-x86:$PATH;
+#export PATH=/media/w7/Projects/cvc-linux-1.0a/bin:$PATH;
+
+#if [[ ${file: -4} ~= /regex/ ]]
 prefix="out";
 results="$prefix/results.txt";
 cvc="$prefix/assertions.txt";
