@@ -36,7 +36,7 @@ for file in $*; do
   ktest-tool.cde klee-last/test*.ktest | tee -a "$results";
   echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
   cd pathconditions/
-  java CreateAssertion ../klee-last/test*.cvc | tee -a "$cvc";
+  java CreateAssertion ../klee-last/test*.cvc >> "../$cvc"; #| tee -a "$cvc";
   cd ..
 done
 
