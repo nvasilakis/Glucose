@@ -3,3 +3,4 @@ klee-out*
 klee-last
 *.txt
 *.zip
+out/*

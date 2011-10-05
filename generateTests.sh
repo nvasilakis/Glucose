@@ -4,7 +4,7 @@
 # TODO: in order to rename results incrementally as KLEE
 # does, we need to get last KLEE build number. Smth like
 # if [[ ${file: -4} ~= /regex/ ]]
-prefix="out/";
+prefix="out";
 results="$prefix/results.txt";
 cvc="$prefix/assertions.txt";
 
@@ -34,7 +34,10 @@ for file in $*; do
   echo -e "\n[$file][Outputting results]\n";
   echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
   ktest-tool.cde klee-last/test*.ktest | tee -a "$results";
-  java pathconditions/CreateAssertion klee-last/test*.cvc | tee -a "$cvc";
+  echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
+  cd pathconditions/
+  java CreateAssertion ../klee-last/test*.cvc | tee -a "$cvc";
+  cd ..
 done
 
 # Output when tests are done
