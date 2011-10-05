@@ -34,7 +34,7 @@ for file in $*; do
   echo -e "\n[$file][Outputting results]\n";
   echo -e "\n\n Test results for [$file]\n\n" | tee -a "$results";
   ktest-tool.cde klee-last/test*.ktest | tee -a "$results";
-  java CreateAssertion klee-last/test*.cvc | tee -a "$cvc";
+  java pathconditions/CreateAssertion klee-last/test*.cvc | tee -a "$cvc";
 done
 
 # Output when tests are done
