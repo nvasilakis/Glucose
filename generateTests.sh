@@ -39,6 +39,7 @@ for file in $*; do
   START=$(date +%s)
   klee.cde -write-cvcs `echo $file | sed "s/c$/o/"`;
   END=$(date +%s)
+# use grep to get the results
   echo -e "\n[$file][Generated x paths in $(( $END - $START )) seconds]\n";
   echo -e "\n[$file][Outputting results]\n";
   echo -e "\n[$file][Converting klee results from bin to ascii]\n" | tee -a "$results";
