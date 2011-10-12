@@ -4,3 +4,4 @@ klee-last
 *.txt
 *.zip
 out/*
+temp*

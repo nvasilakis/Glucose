@@ -48,12 +48,13 @@ for file in $*; do
   cd pathconditions/
   java CreateAssertion ../klee-last/test*.cvc >> "../$cvc"; #| tee -a "$cvc";
   cd ..
-  dependent=$(echo $1 | sed -e "s/\(.*\)\.c/\1_dependent\.c/")
-  sed -e "/^$/ d" -e "/====/ d" out/assertions.txt | while read -r line; do
+  dependent=$(echo $file | sed -e "s/\(.*\)\.c/\1_dependent\.c/")
+  echo -e "\n[$file][Running BLAST on $dependent]\n" | tee -a "$results";
+  sed -e "/^$/ d" -e "/====/ d" $cvc | while read -r line; do
     assertion=$line && read -r line;
-    sed " /#BLAST#/ a\  if $line \{ \n    goto ERROR;\n    ERROR: assert(0);\n  \}" controller_dependent.c > controller_dependent2.c
-
-# Now run blast on each and output the results based on $assertion var files!
+    sed " /#BLAST#/ a\  if $line \{ \n    goto ERROR;\n    ERROR: assert(0);\n  \}" $dependent > temp.c
+    echo -e "$assertion \n" >> $results
+    pblast.opt temp.c | grep -oh "\w*safe\w*" >> $results;
   done
 done
 
