@@ -40,7 +40,7 @@ for file in $*; do
   klee.cde -write-cvcs `echo $file | sed "s/c$/o/"`;
   END=$(date +%s)
 # use grep to get the results
-  echo -e "\n[$file][Generated x paths in $(( $END - $START )) seconds]\n";
+  echo -e "\n[$file][Generated in $(( $END - $START )) seconds]\n";
   echo -e "\n[$file][Outputting results]\n";
   echo -e "\n[$file][Converting klee results from bin to ascii]\n" | tee -a "$results";
   ktest-tool.cde klee-last/test*.ktest  >> "$results"; #| tee -a
@@ -48,6 +48,13 @@ for file in $*; do
   cd pathconditions/
   java CreateAssertion ../klee-last/test*.cvc >> "../$cvc"; #| tee -a "$cvc";
   cd ..
+  dependent=$(echo $1 | sed -e "s/\(.*\)\.c/\1_dependent\.c/")
+  sed -e "/^$/ d" -e "/====/ d" out/assertions.txt | while read -r line; do
+    assertion=$line && read -r line;
+    sed " /#BLAST#/ a\  if $line \{ \n    goto ERROR;\n    ERROR: assert(0);\n  \}" controller_dependent.c > controller_dependent2.c
+
+# Now run blast on each and output the results based on $assertion var files!
+  done
 done
 
 # Output when tests are done
