@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-double rate;
+int rate;
 int last_bg;
 int elapsed_time;
 
