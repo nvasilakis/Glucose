@@ -2,7 +2,10 @@
 # A tiny automation script that generates tests for a 
 # given input and outputs results on file and stdout.
 # TODO: in order to rename results incrementally as KLEE
-# does, we need to get last KLEE build number. Smth like
+# does, we need to get last KLEE build number. [regex]
+# TODO: create _dependent.c automagically
+# TODO: implement better profiling
+# 
 #
 # To run the generateTests.sh:
 # ./generateTests.sh [-a|-r] <file.c>
@@ -70,7 +73,6 @@ else
   done
 fi
 configure_path 'add';
-echo '>>>>>>>>>>>>>>>>>' $PATH
 # Add a -clean option
 echo -e "[Env] Recreating $results and $cvc folders\n";
 if [[ -f "$results" ]]; then
@@ -108,4 +110,5 @@ done
 # Output when tests are done
 if [ -f `which notify-send` ]; then 
   notify-send "Project \"Glucose\"" "Completed Test Case Generation" -i /usr/share/pixmaps/gnome-color-browser.png -t 5000
+  # send me an email if time was more than 30'
 fi
