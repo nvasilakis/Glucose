@@ -3,15 +3,12 @@
 # given input and outputs results on file and stdout.
 # TODO: in order to rename results incrementally as KLEE
 # does, we need to get last KLEE build number. Smth like
+#
+# To run the generateTests.sh:
+# ./generateTests.sh [-a|-r] <file.c>
 
-#export PATH=/media/w7/Projects/klee-cde-package/bin:$PATH;
-#export PATH=/media/w7/Projects/blast-2.5_linux-bin-x86:$PATH;
-#export PATH=/media/w7/Projects/cvc-linux-1.0a/bin:$PATH;
 # need to log an aproximation profiling
 # -max-forks=1000 for KLEE
-
-# Adding export for KLEE in order to run
-# *.cde files only by invoking their name
 
 function configure_path {
   klee_path="/media/w7/Projects/klee-cde-package/bin";
@@ -73,7 +70,7 @@ else
   done
 fi
 configure_path 'add';
-echo $PATH
+echo '>>>>>>>>>>>>>>>>>' $PATH
 # Add a -clean option
 echo -e "[Env] Recreating $results and $cvc folders\n";
 if [[ -f "$results" ]]; then
@@ -97,6 +94,7 @@ for file in $*; do
   cd pathconditions/
   java CreateAssertion ../klee-last/test*.cvc >> "../$cvc"; #| tee -a "$cvc";
   cd ..
+  # TODO Generate a dependent file automagically
   dependent=$(echo $file | sed -e "s/\(.*\)\.c/\1_dependent\.c/")
   echo -e "\n[$file][Running BLAST on $dependent]\n" | tee -a "$results";
   sed -e "/^$/ d" -e "/====/ d" $cvc | while read -r line; do

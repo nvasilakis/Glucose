@@ -1,3 +1,7 @@
+/**
+ * --Dependent version--
+ *  This program implements the Penn Hospital insulin protocol. 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -177,13 +181,12 @@ int adjust(int bg) {
 
 
 int main() {
-  int bg, rate, last_bg, elapsed_time;
-  //if (initialize(bg) == 0) return -1;
-  klee_make_symbolic(&bg, sizeof(bg), "bg");
-  klee_make_symbolic(&rate, sizeof(rate), "rate");
-  klee_make_symbolic(&last_bg, sizeof(last_bg), "last_bg");
-  klee_make_symbolic(&elapsed_time, sizeof(elapsed_time), "elapsed_time");
-  adjust(bg);
+  int bg;
+  if (initialize(bg) == 0) return -1;
+  do {
+    klee_make_symbolic(&bg, sizeof(bg), "bg");
+  }
+  while (adjust(bg));
 }
 
 

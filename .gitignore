@@ -5,3 +5,5 @@ klee-last
 *.zip
 out/*
 temp*
+tags
+*.swp
