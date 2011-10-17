@@ -6,7 +6,7 @@
 #
 # To run the generateTests.sh:
 # ./generateTests.sh [-a|-r] <file.c>
-
+#
 # need to log an aproximation profiling
 # -max-forks=1000 for KLEE
 
