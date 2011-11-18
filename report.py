@@ -2,14 +2,13 @@
 import os
 import re
 
-#  """Report is a script responsible for
-#  1.  given a set of source files with hardcoded assertions, extract these assertions and
-#      compare them with the assertions dynamically generated from the generateTests script
-#  2.  given the output from BLAST on which paths are reachable or not, output information
-#      on this set."""
+#"""Report is a script responsible for the following
+#    1.  given a set of source files with hardcoded assertions, extract these assertions and
+#        compare them with the assertions dynamically generated from the generateTests script
+#    2.  given the output from BLAST on which paths are reachable or not, output information
+#        on this set."""
 
 class Report():
-  """given"""
   def __init__(self, blast_results):
     self.results_file = blast_results
     self.unreachable_count = 0
@@ -144,8 +143,12 @@ if __name__=="__main__":
   #print dynamic[0]
   #diff(hardcoded, dynamic)
   #print_to_file(hardcoded, dynamic)
+  hardcoded = Introspect("/media/w7/Projects/UPenn/software-engineering/Glucose/hardcoded/", [".c"])
+  dynamic = Introspect("/media/w7/Projects/UPenn/software-engineering/Glucose/out/assertions.txt")
+  diff = Diff(hardcoded.getData(), dynamic.getData())
+  diff.getDifference()
 
   # Report Class
-  report = Report("/media/w7/Projects/UPenn/software-engineering/Glucose/out/results.txt")
-  report.gatherstats()
-  report.outputstats()
+#  report = Report("/media/w7/Projects/UPenn/software-engineering/Glucose/out/results.txt")
+#  report.gatherstats()
+#  report.outputstats()
