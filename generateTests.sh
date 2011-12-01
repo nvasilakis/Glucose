@@ -43,8 +43,8 @@
 ##
 function configure_path {
   klee_path="/media/w7/Projects/klee-cde-package/bin";
-  blast_path="/media/w7/Projects/blast-2.5_linux-bin-x86/";
-  cvc_path="/media/w7/Projects/cvc-linux-1.0a/";
+  blast_path="/media/w7/Projects/blast-2.5_linux-bin-x86";
+  cvc_path="/media/w7/Projects/cvc-linux-1.0a";
   # String comparison
   if [[ $1 = "add" ]]; then
     if [ -d $klee_path  ]; then
