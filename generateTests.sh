@@ -144,11 +144,15 @@ for file in $*; do
     processed=`echo $output | sed -e "s/^unsafe unsafe/reachable/" -e "s/^safe safe/unreachable/" -e "s/Ack!/unknown/"`
     echo $processed
     echo $processed >> $results
+    echo -e "$assertion \n" >> $results
+    pblast.opt temp.c | grep -oh "\w*safe\w*" >> $results;
+  done
+done
 
 #Notify us when everything is done
 if [ -f `which notify-send` ]; then 
   notify-send "Project \"Glucose\"" "Completed Test Case Generation" -i /usr/share/pixmaps/gnome-color-browser.png -t 5000
-  # send me an email if time was more than 30'
+  # maybe send me an email if time was more than 30'?
 fi
 
 ###############
