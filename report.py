@@ -1,8 +1,11 @@
 #!/usr/bin/env python
+# coding: utf-8
 import os
 import re
+import getopt
+import sys
 
-#"""Report is a script responsible for the following
+#"""Report is an object-oriented script responsible for the following
 #    1.  given a set of source files with hardcoded assertions, extract these assertions and
 #        compare them with the assertions dynamically generated from the generateTests script
 #    2.  given the output from BLAST on which paths are reachable or not, output information
@@ -30,13 +33,11 @@ class Report():
             self.reachable_count +=1
           elif 'unknown' in line:
             self.unknown_count +=1
-        # TODO return only report
       finally:
         fsock.close()
     except IOError:
       print "File does not exist"
 
-  # TODO: give also a percentage
   def outputstats(self):
     """function that outputs already gathered statistics"""
     total = self.unreachable_count + self.reachable_count + self.unknown_count
@@ -47,7 +48,7 @@ class Report():
   
 
 class Introspect():
-  """given"""
+  """given program list"""
   def __init__(self, directory, extList= [".c"]):
     self.directory = directory 
     self.extList = extList
@@ -71,7 +72,7 @@ class Introspect():
         else:
           # dynamic assertions
           assertion=[]
-          # simple checking -- use regex here
+          # simple checking -- we could use regex here
           assertion = [line[1:-2] for line in fsock if "(" in line]
           return assertion
       finally:
@@ -88,14 +89,15 @@ class Introspect():
       assertions = self.getAssertion(self.directory)
     return assertions
 
-
-
 class Diff():
-  """docstring for Diff"""
+  """ Implements the comparison in two sets of assertions
+      outputs their intersection and difference 
+  """
   def __init__(self, file1, file2):
     self.file1 = file1
     self.file2 = file2
     
+  # this is where the actual work is done
   def getDifference(self):
     """compares two assertion sets"""
     common = ""
@@ -107,13 +109,13 @@ class Diff():
     diff2 = set(self.file2) - common
     print "common:"
     print common
-    print "diff1:"
+    print "Only in 1st set:"
     print diff1
-    print "diff2:"
+    print "Only in 2nd set:"
     print diff2
     
   def printToFile(self):
-    """print to file"""
+    """prints diff to to file"""
     fsock = open("diff.txt", "w", 0)
     fsock.write("==hardcoded==")
     for path in self.file1:
@@ -125,30 +127,55 @@ class Diff():
 
   def bylength(word1, word2):
       """
-      write your own compare function:
+      our own compare function:
       returns value > 0 of word1 longer then word2
       returns value = 0 if the same length
       returns value < 0 of word2 longer than word1
       """
       return len(word1) - len(word2)
 
-if __name__=="__main__":
-  #hardcoded = getData("/media/w7/Projects/UPenn/software-engineering/Glucose/hardcoded/", [".c"])
-  #dynamic = getData("/media/w7/Projects/UPenn/software-engineering/Glucose/out/assertions.txt")
-  #print "hardcoded"
-  ##for path in hardcoded:
-  #print hardcoded[0]
-  #print "dynamic"
-  ##for path in dynamic:
-  #print dynamic[0]
-  #diff(hardcoded, dynamic)
-  #print_to_file(hardcoded, dynamic)
-  hardcoded = Introspect("/media/w7/Projects/UPenn/software-engineering/Glucose/hardcoded/", [".c"])
-  dynamic = Introspect("/media/w7/Projects/UPenn/software-engineering/Glucose/out/assertions.txt")
-  diff = Diff(hardcoded.getData(), dynamic.getData())
-  diff.getDifference()
+# Parses input and dispatches accordingly
+# also handles erroneous input
+def parse_input(argv):
+  """handle arguments and dispatch"""
+  try:
+    opts, args = getopt.getopt(argv,"hm:d",["help", "mode="])
+  except getopt.error:
+    usage();
+  if (opts.__len__() == 0):
+    usage();
+  for opt, arg in opts:
+    if opt in ("-h", "--help"):
+      usage();
+    elif opt in ("-m", "--mode"):
+      if (arg == "extract"):
+        hardcoded = Introspect("/media/w7/Projects/UPenn/software-engineering/Glucose/hardcoded/", [".c"])
+        dynamic = Introspect("/media/w7/Projects/UPenn/software-engineering/Glucose/out/assertions.txt")
+        diff = Diff(hardcoded.getData(), dynamic.getData())
+        diff.getDifference()
+      elif (arg == "compare"):
+        report = Report("/media/w7/Projects/UPenn/software-engineering/Glucose/out/results.txt")
+        report.gatherstats()
+        report.outputstats()
 
-  # Report Class
-#  report = Report("/media/w7/Projects/UPenn/software-engineering/Glucose/out/results.txt")
-#  report.gatherstats()
-#  report.outputstats()
+def usage():
+  """called when a manual is needed """
+  print """usage: report.py [-h] [-m|--mode] <mm>
+
+  -h          print help message
+
+  -m,--mode   selects a modus operandi among:
+
+          "extract":  given a set of source files with hardcoded assertions, 
+                      it extracts these assertions and compares them against 
+                      assertions dynamically generated from generateTests.sh 
+
+          "compare":  given the output from BLAST on which paths are reacha-
+                      ble or not, generates simple statistics on this set.
+
+  -d,--debug  debug mode (makes use of other scripts)"""
+
+if __name__=="__main__":
+  # send input to the dispatcher
+  parse_input(sys.argv[1:])
+
